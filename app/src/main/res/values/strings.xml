@@ -2,4 +2,7 @@
     <string name="app_name">NewsApp</string>
     <string name="read_article">Read article</string>
     <string name="defaulttext">default</string>
+    <string name="msg_no_connection">There is no connection to server</string>
+    <string name="msg_wait">Loading data, please wait</string>
+    <string name="nothingfound">Sorry, nothing found</string>
 </resources>

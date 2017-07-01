@@ -2,22 +2,37 @@ package com.kubaczeremosz.newsapp;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 
 public class NewsLoader extends AsyncTaskLoader<ArrayList<News>> {
 
-    public NewsLoader(Context context) {
+    private String mUrl;
+
+    public NewsLoader(Context context, String url) {
         super(context);
+        this.mUrl=url;
     }
 
     @Override
     protected void onStartLoading() {
-        super.onStartLoading();
+        forceLoad();
     }
 
     @Override
     public ArrayList<News> loadInBackground() {
-        return null;
+        if (mUrl == null) {
+            return null;
+        }
+        // Perform the network request, parse the response, and extract a list of news.
+        ArrayList<News> newsList = null;
+        try {
+            newsList = QueryUtils.extractNews(mUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return newsList;
     }
 }

@@ -25,7 +25,8 @@ public class QueryUtils {
         if(jasonResponse!=null){
             try {
                 JSONObject root = new JSONObject(jasonResponse);
-                JSONArray items= root.getJSONArray("results");
+                JSONObject response = root.getJSONObject("response");
+                JSONArray items= response.getJSONArray("results");
                 for(int i=0; i<items.length();i++){
                     JSONObject currentNews=items.getJSONObject(i);
                     String title =currentNews.getString("title");
@@ -45,7 +46,7 @@ public class QueryUtils {
                 }
 
             } catch (JSONException e) {
-                //Log.e("BookAsyncTask", "Problem parsing the books JSON results", e);
+                Log.e("BookAsyncTask", "Problem parsing the books JSON results", e);
             }
 
             return newsList;
