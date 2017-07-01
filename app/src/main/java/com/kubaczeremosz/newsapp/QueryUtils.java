@@ -24,6 +24,7 @@ public class QueryUtils {
         ArrayList<News> newsList = new ArrayList<>();
         if(jasonResponse!=null){
             try {
+                ///cos nie teges
                 JSONObject root = new JSONObject(jasonResponse);
                 JSONObject response = root.getJSONObject("response");
                 JSONArray items= response.getJSONArray("results");
