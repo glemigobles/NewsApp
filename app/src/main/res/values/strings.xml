@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">NewsApp</string>
+    <string name="read_article">Read article</string>
+    <string name="defaulttext">default</string>
+</resources>
