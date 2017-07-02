@@ -13,7 +13,7 @@ public class NewsLoader extends AsyncTaskLoader<ArrayList<News>> {
 
     public NewsLoader(Context context, String url) {
         super(context);
-        this.mUrl=url;
+        this.mUrl = url;
     }
 
     @Override

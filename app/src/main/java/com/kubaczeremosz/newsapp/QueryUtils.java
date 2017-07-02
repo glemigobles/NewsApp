@@ -1,9 +1,11 @@
 package com.kubaczeremosz.newsapp;
 
 import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,34 +22,52 @@ public class QueryUtils {
     public static ArrayList<News> extractNews(String requestUrl) throws IOException {
 
         URL url = createUrl(requestUrl);
-        String jasonResponse= makeHttpRequest(url);
+        String jasonResponse = makeHttpRequest(url);
         ArrayList<News> newsList = new ArrayList<>();
-        if(jasonResponse!=null){
+        if (jasonResponse != null) {
             try {
-                ///cos nie teges
                 JSONObject root = new JSONObject(jasonResponse);
                 JSONObject response = root.getJSONObject("response");
-                JSONArray items= response.getJSONArray("results");
-                for(int i=0; i<items.length();i++){
-                    JSONObject currentNews=items.getJSONObject(i);
-                    String title =currentNews.getString("title");
-                    String date =currentNews.getString("webPublicationDate");
-                    String type =currentNews.getString("sectionName");
-                    String pageurl =currentNews.getString("webUrl");
-                    JSONObject tags = currentNews.getJSONObject("volumeInfo");
-                    String author;
-                    if(tags.has("webTitle")){
-                        author = tags.getString("webTitle");
+                JSONArray results = response.getJSONArray("results");
+                JSONObject item;
+                JSONArray tags;
+                for (int i = 0; i < results.length(); i++) {
+                    JSONObject currentNews = results.getJSONObject(i);
+                    String title = currentNews.getString("webTitle");
+                    String date;
+                    if (currentNews.has("webPublicationDate")) {
+                        String rawdate = currentNews.getString("webPublicationDate");
+                        date = rawdate.substring(0, rawdate.indexOf("T"));
+
+                    } else {
+                        date = "Date N/A";
                     }
-                    else{
-                        author = "Author N/A";
+                    String type;
+                    if (currentNews.has("sectionName")) {
+                        type = currentNews.getString("sectionName");
+                    } else {
+                        type = "type N/A";
                     }
-                    News news =new News(title,author,pageurl,type,date);
+
+                    String pageurl = currentNews.getString("webUrl");
+
+                    String author = "Author N/A";
+                    tags = currentNews.getJSONArray("tags");
+                    if (tags.length() > 0) {
+                        item = tags.getJSONObject(0);
+
+                        if (item.has("webTitle")) {
+                            author = item.getString("webTitle");
+                        } else {
+                            author = "Author N/A";
+                        }
+                    }
+                    News news = new News(title, author, pageurl, type, date);
                     newsList.add(news);
                 }
 
             } catch (JSONException e) {
-                Log.e("BookAsyncTask", "Problem parsing the books JSON results", e);
+                Log.e("BookAsyncTask", "Problem parsing the news JSON results", e);
             }
 
             return newsList;
@@ -60,7 +80,7 @@ public class QueryUtils {
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException exception) {
-            Log.e("URL","Error with creating URL", exception);
+            Log.e("URL", "Error with creating URL", exception);
             return null;
         }
         return url;
@@ -77,13 +97,13 @@ public class QueryUtils {
             urlConnection.setConnectTimeout(12000 /* milliseconds */);
             urlConnection.connect();
 
-            if(urlConnection.getResponseCode()==200){
+            if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             }
 
         } catch (IOException e) {
-            Log.e("connection","Error with creating connecting", e);
+            Log.e("connection", "Error with creating connecting", e);
             return null;
 
         } finally {

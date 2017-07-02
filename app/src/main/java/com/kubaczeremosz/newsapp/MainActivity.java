@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<News>> {
 
-    private static String QUERRY_REQUEST="http://content.guardianapis.com/search?q=debate&section=technology&tag=technology/technology&show-tags=contributor&order-by=newest&page-size=20&api-key=test";
+    private static String QUERRY_REQUEST = "http://content.guardianapis.com/search?q=debate&section=politics&show-tags=contributor&order-by=newest&page-size=20&api-key=test";
     private static final int NEWS_LOADER_ID = 1;
 
     private NewsListAdapter mAdapter;
@@ -31,12 +31,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         setContentView(R.layout.activity_main);
 
         //message view
-        mText= (TextView) findViewById(R.id.messageText);
+        mText = (TextView) findViewById(R.id.messageText);
         //loading indicator
-        loadingIndicator=findViewById(R.id.loading_indicator);
+        loadingIndicator = findViewById(R.id.loading_indicator);
         //listView
-        listView= (ListView) findViewById(R.id.list_view);
-        mAdapter= new NewsListAdapter(this, new ArrayList<News>());
+        listView = (ListView) findViewById(R.id.list_view);
+        mAdapter = new NewsListAdapter(this, new ArrayList<News>());
 
         //check connection
         ConnectivityManager connMgr = (ConnectivityManager)
@@ -49,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             loadingIndicator.setVisibility(View.VISIBLE);
             LoaderManager loaderManager = getLoaderManager();
             loaderManager.initLoader(NEWS_LOADER_ID, null, MainActivity.this);
+            listView.setAdapter(mAdapter);
 
-        }
-        else{
+        } else {
             mText.setText(R.string.msg_no_connection);
             loadingIndicator.setVisibility(View.GONE);
         }
@@ -80,6 +80,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<ArrayList<News>> loader) {
-            mAdapter.clear();
+        mAdapter.clear();
     }
 }
